@@ -4,13 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const passport = require('passport');
+const session = require("express-session");
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-// const {sequelize} = require('./config/db');
-// const {User} = require('./models/user');
+const {sequelize} = require('./config/db');
+const {User} = require('./models/user');
 // sequelize.sync();
+
+require('./config/auth');
 
 var app = express();
 
@@ -20,6 +24,11 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(session({
+  secret: "my_super_secret_phrase!",
+  resave: false,
+  saveUninitialized: false,
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

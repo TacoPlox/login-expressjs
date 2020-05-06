@@ -7,12 +7,15 @@
 </head>
 <body>
     <h1>Create a new account</h1>
+    <% if (locals.errorMessage) { %>
+        <p><%= errorMessage %> </p>
+    <% } %>
     <form action="/register" method="POST">
-        <input type="text" placeholder="Username" name="username">
+        <input type="text" placeholder="Username" name="username" value="<%= locals.username ? username : '' %>">
         <br>
-        <input type="password" placeholder="Password" name="password">
+        <input type="password" placeholder="Password" name="password" value="<%= locals.password ? password : '' %>">
         <br>
-        <input type="password" placeholder="Confirm Password" name="confirmPassword">
+        <input type="password" placeholder="Confirm Password" name="confirmPassword" value="<%= locals.confirmPassword ? confirmPassword : '' %>">
         <br>
         <button>Register</button>
     </form>

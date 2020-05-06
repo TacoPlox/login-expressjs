@@ -1,36 +1,46 @@
-const {Sequelize, DataTypes} = require('sequelize');
-const {sequelize} = require('./../config/db');
-const bcrypt = require('bcrypt');
+// const {Sequelize, DataTypes} = require('sequelize');
+// const {sequelize} = require('./../config/db');
+// const Model = Sequelize.Model;
+
+
+const bcrypt = require('bcryptjs');
+
+// Importar librería Sequelize
+const Sequelize = require('sequelize');
 const Model = Sequelize.Model;
 
-class User extends Model {
-    // generateHash(password) {
-    //     return bcrypt.hash(password, 10);
-    // }
+// Importar conexión a base de datos
+const { sequelize } = require('./../config/db');
 
-    // checkPassword(password) {
-    //     return bcrypt.compare(password, this.password)
-    // }
-};
+// Crear modelo
+class User extends Model {
+    //static - no requiere un User de la base de datos
+    static generateHash(password) {
+        let salt = bcrypt.genSaltSync(10);
+        let hash = bcrypt.hashSync(password, salt);
+        return hash;
+    }
+    
+    //no es static - sí requiere un User de la base de datos
+    checkPassword(password) {
+        return bcrypt.compareSync(password, this.password);;
+    }
+}
 
 User.init({
+    //Definir campos del modelo
     username: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: Sequelize.STRING,
+        allowNull: false
     },
     password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-},{
+        type: Sequelize.STRING,
+        allowNull: false
+    }
+}, {
     sequelize,
-    modelName: 'user',
-
-    //to set a custom table name
-    // freezeTableName: true,
-    // tableName: 'Users'
+    modelName: 'user'
 });
 
-//Game.sync();
-
-module.exports = {User};
+// Exportar modelo
+module.exports = { User };

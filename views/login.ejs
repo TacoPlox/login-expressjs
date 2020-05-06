@@ -7,6 +7,9 @@
 </head>
 <body>
     <h1>Login to continue</h1>
+    <% if (locals.successMessage) { %>
+        <p><%= successMessage %> </p>
+    <% } %>
     <form action="/login" method="POST">
         <input type="text" placeholder="Username" name="username">
         <br>
