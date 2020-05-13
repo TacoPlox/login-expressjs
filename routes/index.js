@@ -25,4 +25,10 @@ router.post('/register', controller.registerPost);
 //GET logout
 router.get('/logout', controller.logout);
 
+router.get('/profile', controller.checkLogin, controller.profile);
+
+router.post('/profile/update', controller.checkLogin, controller.uploadProfilePicture, controller.profileUpdate);
+
+router.get('/image/:id', controller.image);
+
 module.exports = router;

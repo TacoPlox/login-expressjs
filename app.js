@@ -12,9 +12,11 @@ var usersRouter = require('./routes/users');
 
 const {sequelize} = require('./config/db');
 const {User} = require('./models/user');
-// sequelize.sync();
 
 require('./config/auth');
+require('./config/associations');
+
+// sequelize.sync({force: true});
 
 var app = express();
 

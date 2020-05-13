@@ -1,5 +1,9 @@
 const passport = require('passport');
 const { User } = require('./../models/user');
+const { Image } = require('./../models/image');
+const multer = require('multer');
+let storage = multer.memoryStorage();
+let upload = multer({ storage: storage });
 
 let controller = {};
 
@@ -116,6 +120,61 @@ controller.registerPost = (req,res,next) => {
 controller.logout = (req, res, next) => {
     req.logout();
     res.redirect('/');
+};
+
+controller.profile = (req, res, next) => {
+    return res.render('profile', {
+        user: req.user
+    });
+};
+
+controller.profileUpdate = (req, res, next) => {
+    let username = req.body.username;
+    
+    //Leer información de archivo cargado
+    //req.file
+    let mimetype = req.file.mimetype;
+    let buffer = req.file.buffer;
+
+    //TODO: validate username
+
+    (async () => {
+
+        //Crear un Image
+        let image = Image.build({
+            data: buffer,
+            mimetype: mimetype,
+        });
+
+        //Guardar Image en la base de datos
+        await image.save();
+
+        //Asignar image creada al User
+        req.user.setImage(image);
+
+        //Actualizar username
+        req.user.username = username;
+
+        //Actualizar user en la base de datos
+        await req.user.save();
+
+        return res.redirect('/home');
+    })();
+};
+
+controller.uploadProfilePicture = upload.single('profilePicture');
+
+controller.image = (req, res, next) => {
+    let id = req.params.id;
+
+    (async () => {
+        let image = await Image.findByPk(id);
+
+        //Indicar que el contenido es una imagen (mimetype)
+        res.set('Content-Type', image.mimetype);
+        //Enviar imagen
+        res.end(image.data, 'binary');
+    })();
 };
 
 module.exports = controller;

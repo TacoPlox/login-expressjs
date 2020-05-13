@@ -1,8 +1,3 @@
-// const {Sequelize, DataTypes} = require('sequelize');
-// const {sequelize} = require('./../config/db');
-// const Model = Sequelize.Model;
-
-
 const bcrypt = require('bcryptjs');
 
 // Importar librería Sequelize
